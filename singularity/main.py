@@ -1,5 +1,6 @@
-# MRTrix3 Connectome script for ACCRE
+# MRTrix3 Connectome script for ACCRE - Custom version for Jasmine
 # Graham Johnson
+# March 2022
 
 import subprocess
 import os
@@ -21,7 +22,7 @@ subprocess.check_call(cmd, shell=True)
 loops = int(sys.argv[1])
 print("We will do " + str(loops) + " iterations of tckgen")
 
-# threads of 0 disables multithreading
+# Multithreading option (threads of 0 disables multithreading)
 threads = int(sys.argv[2])
 print("We will use " + str(threads) + " CPU threads")
 
@@ -83,10 +84,10 @@ cmd = 'dwi2fod msmt_csd {}DWI_biascorrect_preprocessed.mif {}response_wm.txt {}F
 subprocess.check_call(cmd, shell=True)
 
 # Steps to register T1 to DWI space
-cmd = 'mrconvert /INPUTS/t1.nii.gz {}T1W3D.mif -force -nthreads {}'.format(tmp_dir,str(threads))
+cmd = 'mrconvert /INPUTS/t1.nii {}T1W3D.mif -force -nthreads {}'.format(tmp_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
-cmd = 'mrconvert /INPUTS/t1.nii.gz {}T1W3D.nii -force -nthreads {}'.format(tmp_dir,str(threads))
+cmd = 'mrconvert /INPUTS/t1.nii {}T1W3D.nii -force -nthreads {}'.format(tmp_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
 T1_header = image.Header('{}T1W3D.mif'.format(tmp_dir))
@@ -162,10 +163,10 @@ subprocess.check_call(cmd, shell=True)
 cmd = '5tt2vis {}5TT.mif {}5TT_vis.nii.gz -force -nthreads {}'.format(tmp_dir,results_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
-cmd = 'mrconvert /INPUTS/aparc+aseg.mgz {}aparc+aseg.mif -force -nthreads {}'.format(tmp_dir,str(threads))
+cmd = 'mrconvert /INPUTS/diff_atlas_JWJ.nii {}diff_atlas_JWJ.mif -force -nthreads {}'.format(tmp_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
-cmd = 'mrtransform {}aparc+aseg.mif {}aparc+aseg_registered.mif -linear {}rigid_T1_to_dwi.txt -template {}T1W3D_registered.mif -interp nearest -force -nthreads {}'.format(tmp_dir,tmp_dir,tmp_dir,tmp_dir,str(threads))
+cmd = 'mrtransform {}diff_atlas_JWJ.mif {}parc.mif -linear {}rigid_T1_to_dwi.txt -template {}T1W3D_registered.mif -interp nearest -force -nthreads {}'.format(tmp_dir,tmp_dir,tmp_dir,tmp_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
 #DEBUGGING - output steps surrounding labelconvert because bilateral insula are missing
@@ -173,26 +174,28 @@ subprocess.check_call(cmd, shell=True)
 #subprocess.check_call(cmd, shell=True)
 # SOLVED: have to manually add L and R insula to FreeSurferColorLUT.txt
 
-cmd = 'labelconvert {}aparc+aseg_registered.mif /CODE/fs_files/FreeSurferColorLUT.txt /APPS/mrtrix3/share/mrtrix3/labelconvert/fs_default.txt {}XNAT_parc_init.mif -force -nthreads {}'.format(tmp_dir,tmp_dir,str(threads))
-subprocess.check_call(cmd, shell=True)
+# Should not need to label convert because Jasmine already did it
+# cmd = 'labelconvert {}diff_atlas_JWJ_registered2DWI.mif /CODE/fs_files/FreeSurferColorLUT.txt /APPS/mrtrix3/share/mrtrix3/labelconvert/fs_default.txt {}parc_init.mif -force -nthreads {}'.format(tmp_dir,tmp_dir,str(threads))
+# subprocess.check_call(cmd, shell=True)
 
-attempts = 0
-sgmfix_done = 0
-while attempts < 3:
-    attempts = attempts + 1
-    try:
-        cmd = 'labelsgmfix {}XNAT_parc_init.mif {}T1W3D_registered.mif  /APPS/mrtrix3/share/mrtrix3/labelconvert/fs_default.txt {}parc.mif -force -nthreads {} -scratch /tmp'.format(tmp_dir,tmp_dir,tmp_dir,str(threads))
-        subprocess.check_call(cmd, shell=True)
-        sgmfix_done = 1
-        break
-    except Exception as error:
-        print("labelsgmfix failed, trying again")
-
-if sgmfix_done == 0:
-    raise Exception("labelsgmfix failed all atempts")
+# Not attempting to label fix because atlas was already custom generated
+# attempts = 0
+# sgmfix_done = 0
+# while attempts < 3:
+#     attempts = attempts + 1
+#     try:
+#         cmd = 'labelsgmfix {}parc_init.mif {}T1W3D_registered.mif  /APPS/mrtrix3/share/mrtrix3/labelconvert/fs_default.txt {}parc.mif -force -nthreads {} -scratch /tmp'.format(tmp_dir,tmp_dir,tmp_dir,str(threads))
+#         subprocess.check_call(cmd, shell=True)
+#         sgmfix_done = 1
+#         break
+#     except Exception as error:
+#         print("labelsgmfix failed, trying again")
+#
+# if sgmfix_done == 0:
+#     raise Exception("labelsgmfix failed all atempts")
 
 # mrconvert the parc.mif to results
-cmd = 'mrconvert {}parc.mif {}parc.nii.gz -force -nthreads {}'.format(tmp_dir,results_dir,str(threads))
+cmd = 'mrconvert {}parc.mif {}diff_atlas_JWJ_registered2DWI.mif.nii.gz -force -nthreads {}'.format(tmp_dir,results_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
 

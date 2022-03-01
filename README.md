@@ -1,10 +1,10 @@
-# accre_dwi_connectomes
+# Jasmine cutsom accre_dwi_connectomes
 Code to run MRtrix3 with Singularity 3.4 (https://sylabs.io/guides/3.4/user-guide/) container on Vanderbilt's ACCRE.
 
-This will create the following outputs based on Desikan-Killiany atlas:
+This will create the following outputs based on Desikan-Killiany + custom atlases atlas:
 SIFT2-weighted connectome 
 FA connectome
-aparc+aseg registered to DWI
+diff_atlas_JWJ_registered2DWI.nii 
 5TT
 T1 registered to DWI
 
@@ -21,7 +21,7 @@ dwmri.nii.gz
 diff_atlas_JWJ.nii (DK is from 'recon-all':https://surfer.nmr.mgh.harvard.edu/, the rest are custom generated)
 
 3) Build Singularity:
-Required files (should all be in /singularity)
+Required files (should all be in /singularity - the recipe file will look for these on GitHub)
 ROBEX/
 main.py
 main.sh
