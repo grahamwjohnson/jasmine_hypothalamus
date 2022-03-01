@@ -18,7 +18,7 @@ t1.nii.gz
 dwmri.bval
 dwmri.bvec
 dwmri.nii.gz
-aparc+aseg.mgz (from freesurfer 'recon-all':https://surfer.nmr.mgh.harvard.edu/)
+diff_atlas_JWJ.nii (DK is from 'recon-all':https://surfer.nmr.mgh.harvard.edu/, the rest are custom generated)
 
 3) Build Singularity:
 Required files (should all be in /singularity)
