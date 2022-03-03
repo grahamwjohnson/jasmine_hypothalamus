@@ -138,7 +138,7 @@ cmd = 'mrtransform {}T1W3D_mask.mif {}T1W3D_mask_registered.mif -linear {}rigid_
 subprocess.check_call(cmd, shell=True)
 
 # mrconvert the T1_registered to results directory
-cmd = 'mrconvert {}T1W3D_registered.mif {}T1W3D_registered.nii.gz -force -nthreads {}'.format(tmp_dir,results_dir,str(threads))
+cmd = 'mrconvert {}T1W3D_registered.mif {}T1W3D_registered2DWI.nii.gz -force -nthreads {}'.format(tmp_dir,results_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
 attempts = 0
@@ -163,6 +163,7 @@ subprocess.check_call(cmd, shell=True)
 cmd = '5tt2vis {}5TT.mif {}5TT_vis.nii.gz -force -nthreads {}'.format(tmp_dir,results_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 
+# Bring in the custom atals
 cmd = 'mrconvert /INPUTS/diff_atlas_JWJ.nii {}diff_atlas_JWJ.mif -force -nthreads {}'.format(tmp_dir,str(threads))
 subprocess.check_call(cmd, shell=True)
 

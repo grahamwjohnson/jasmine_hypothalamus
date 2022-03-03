@@ -1,6 +1,8 @@
 # Jasmine cutsom accre_dwi_connectomes
 Code to run MRtrix3 with Singularity 3.4 (https://sylabs.io/guides/3.4/user-guide/) container on Vanderbilt's ACCRE.
 
+Make sure Singularity 3.4 is installed locally to build singularity and installed on ACCRE so that we can run singularity there. 
+
 This will create the following outputs based on Desikan-Killiany + custom atlases atlas:
 SIFT2-weighted connectome 
 FA connectome
@@ -21,16 +23,16 @@ dwmri.nii.gz
 diff_atlas_JWJ.nii (DK is from 'recon-all':https://surfer.nmr.mgh.harvard.edu/, the rest are custom generated)
 
 3) Build Singularity:
-Required files (should all be in /singularity - the recipe file will look for these on GitHub)
+Required files (should all be in GitHub repository listed in recipe file):
 ROBEX/
 main.py
 main.sh
 
-Example build call (change the directories). This assumes you have the required files/directories in same folder as definition file (e.g. /singularity folder)
-$ sudo singularity build dwi_connectomes_v1.1.simg dwi_connectomes_def_v1.1.txt
+Example build call (change the directories). This assumes you have the required files/directories in the github repository listed in the recipe file
+$ sudo singularity build jasmine_recipe_dwi_connectomes_v1.0.simg jasmine_recipe_dwi_connectomes_v1.0.txt
 
 4) Run Singularity Image (locally to check if it works, kill it after one iteration)
-$ singularity exec -e --contain -B /tmp:/tmp -B /home/user/PROJECTS/dwi_connectomes/inputs/subdir1:/INPUTS -B /home/user/PROJECTS/dwi_connectomes/outputs/subdir1:/OUTPUTS /home/user/PROJECTS/dwi_connectomes/singularity/dwi_connectomes_v1.1.simg bash /CODE/main.sh 10
+$ singularity exec -e --contain -B /tmp:/tmp -B /home/graham/PROJECTS/jasmine_hypothalamus/inputs/108996:/INPUTS -B /home/graham/PROJECTS/jasmine_hypothalamus/outputs/108996:/OUTPUTS /home/graham/PROJECTS/jasmine_hypothalamus/singularity/jasmine_recipe_dwi_connectomes_v1.0.simg bash /CODE/main.sh 1 8 1
 
 5) Copy to ACCRE
 $ scp dwi_connectomes user@login.accre.vanderbilt.edu:/scratch/user/projects/

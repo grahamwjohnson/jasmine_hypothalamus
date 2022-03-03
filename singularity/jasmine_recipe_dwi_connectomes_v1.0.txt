@@ -3,7 +3,7 @@ From: ubuntu:18.04
 
 # Example command to build .simg from local directory: sudo singularity build dwi_connectomes_v1.1.simg recipe_dwi_connectomes_v1.1.txt
 
-# Version 1.4: 8/3/2021 - added ability to keep temp files with third input variable
+# Version 2.0: 3/1/2022 - created from DWI_connectomes version 1.4 - custom version for Jasmine's hypothalamus project
 
 %post -c /bin/bash
 
@@ -25,10 +25,10 @@ From: ubuntu:18.04
     # Go get scripts from Github
     apt-get -y install git npm
     npm install -g github-files-fetcher
-    fetcher --url=https://github.com/grahamwjohnson/accre_dwi_connectomes/tree/master/singularity/ROBEX --out=/APPS
-    fetcher --url=https://github.com/grahamwjohnson/accre_dwi_connectomes/tree/master/singularity/main.py --out=/CODE
-    fetcher --url=https://github.com/grahamwjohnson/accre_dwi_connectomes/tree/master/singularity/main.sh --out=/CODE
-    fetcher --url=https://github.com/grahamwjohnson/accre_dwi_connectomes/tree/master/singularity/fs_files --out=/CODE
+    fetcher --url=https://github.com/grahamwjohnson/jasmine_hypothalamus/tree/master/singularity/ROBEX --out=/APPS
+    fetcher --url=https://github.com/grahamwjohnson/jasmine_hypothalamus/tree/master/singularity/main.py --out=/CODE
+    fetcher --url=https://github.com/grahamwjohnson/jasmine_hypothalamus/tree/master/singularity/main.sh --out=/CODE
+    fetcher --url=https://github.com/grahamwjohnson/jasmine_hypothalamus/tree/master/singularity/fs_files --out=/CODE
 
     # Install xvfb
     apt-get -y install xvfb
