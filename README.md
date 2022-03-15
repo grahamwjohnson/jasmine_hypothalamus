@@ -1,7 +1,7 @@
 # Jasmine cutsom accre_dwi_connectomes
 Code to run MRtrix3 with Singularity 3.4 (https://sylabs.io/guides/3.4/user-guide/) container on Vanderbilt's ACCRE.
 
-Make sure Singularity 3.4 is installed locally to build singularity and installed on ACCRE so that we can run singularity there. 
+Make sure Singularity 3.7.3 (sams as ACCRE version at the time) is installed locally to build singularity and installed on ACCRE so that we can run singularity there. 
 
 This will create the following outputs based on Desikan-Killiany + custom atlases atlas:
 SIFT2-weighted connectome 
@@ -11,6 +11,48 @@ diff_atlas_JWJ_registered2DWI.nii
 T1 registered to DWI
 
 The input argument to the singularity 'exec' call in the .slurm file ductates how many times MRTrix's 'tckgen' will be called nad thus how many redundant connectomes will be generated. Multiple connectomes are generated in attamp to cpature stochasticity of probablistic tractography. 
+
+0) Ensure that your local singularity version is the same version as on ACCRE
+
+0.1) Can use a virtual environment (e.g. conda)
+
+0.1.1) conda create -n hypo python=3.7 anaconda
+
+0.1.2) https://sylabs.io/guides/3.7/user-guide/quick_start.html (troubleshooting with Go version: https://stackoverflow.com/questions/63865962/singularity-3-6-2-installation, Golang install: https://golangci-lint.run/usage/install/#other-ci )
+
+0.1.3) Use these custom steps (as of March 2022) to install correct version of Go/Singularity
+
+sudo apt-get update && \
+sudo apt-get install -y build-essential \
+libseccomp-dev pkg-config squashfs-tools cryptsetup
+
+sudo rm -r /usr/local/go
+
+export VERSION=1.13.15 OS=linux ARCH=amd64  # change this as you need
+
+wget -O /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz https://dl.google.com/go/go${VERSION}.${OS}-${ARCH}.tar.gz && \
+sudo tar -C /usr/local -xzf /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz
+
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
+source ~/.bashrc
+
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.44.2
+
+mkdir -p ${GOPATH}/src/github.com/sylabs && \
+cd ${GOPATH}/src/github.com/sylabs && \
+git clone https://github.com/sylabs/singularity.git && \
+cd singularity
+
+git checkout v3.7.3
+
+cd ${GOPATH}/src/github.com/sylabs/singularity && \
+./mconfig && \
+cd ./builddir && \
+make && \
+sudo make install
+
+singularity version
 
 1) Need to add 'inputs' folder and 'outputs' folder to the project directory (see the .txt files in /code for input and output subdirectory setup). Also add a /code/logs directory. 
 
