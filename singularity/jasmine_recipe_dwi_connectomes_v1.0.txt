@@ -61,21 +61,26 @@ From: ubuntu:18.04
     cd /
 
     # Install ANTs
-    apt-get -y install git g++ zlib1g-dev cmake
-    cd /INSTALLERS
-    mkdir ants_installer
-    cd ants_installer
-    git clone https://github.com/stnava/ANTs.git
-    cd ANTs
-    git checkout a025d042f56561812172a1f6b2ae6848ad914767
-    cd .. 
-    mkdir ants_build
-    cd ants_build
-    cmake /INSTALLERS/ants_installer/ANTs -DCMAKE_INSTALL_PREFIX=/APPS/ants
-    make 2>&1 | tee build.log
-    cd ANTS-build
-    make install 2>&1 | tee install.log
-    cd /
+    DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
+    apt-get install ants -y
+
+    #git config –global url.”https://”.insteadOf git://
+    #apt-get -y install git g++ zlib1g-dev cmake
+    #cd /INSTALLERS
+    #mkdir ants_installer
+    #cd ants_installer
+    #git clone https://github.com/stnava/ANTs.git
+    #cd ANTs
+    #git checkout a025d042f56561812172a1f6b2ae6848ad914767
+    #cd .. 
+    #mkdir ants_build
+    #cd ants_build
+    #cmake /INSTALLERS/ants_installer/ANTs -DCMAKE_INSTALL_PREFIX=/APPS/ants
+    #make 2>&1 | tee build.log
+    #cd ANTS-build
+    #make install 2>&1 | tee install.log
+    #cd /
+
 
     # Set Permissions
     chmod -R 775 /INPUTS
@@ -99,7 +104,8 @@ From: ubuntu:18.04
     # Convert3D
     export PATH="/APPS/c3d-1.0.0-Linux-x86_64/bin:$PATH"
     # ANTs
-    export ANTSPATH=/APPS/ants/bin/
+    #export ANTSPATH=/APPS/ants/bin/
+    export ANTSPATH=/usr/lib/ants/
     export PATH=${ANTSPATH}:$PATH
     # ROBEX
     ROBEX=/APPS/ROBEX/
