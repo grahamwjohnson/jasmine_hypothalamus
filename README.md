@@ -4,13 +4,13 @@ Code to run MRtrix3 with Singularity 3.4 (https://sylabs.io/guides/3.4/user-guid
 Make sure Singularity 3.7.3 (sams as ACCRE version at the time) is installed locally to build singularity and installed on ACCRE so that we can run singularity there. 
 
 This will create the following outputs based on Desikan-Killiany + custom atlases atlas:
-SIFT2-weighted connectome 
-FA connectome
-diff_atlas_JWJ_registered2DWI.nii 
-5TT
+SIFT2-weighted connectome, 
+FA connectome, 
+diff_atlas_JWJ_registered2DWI.nii,
+5TT, 
 T1 registered to DWI
 
-The input argument to the singularity 'exec' call in the .slurm file ductates how many times MRTrix's 'tckgen' will be called nad thus how many redundant connectomes will be generated. Multiple connectomes are generated in attamp to cpature stochasticity of probablistic tractography. 
+The input argument to the singularity 'exec' call in the .slurm file dictates how many times MRTrix's 'tckgen' will be called and thus how many redundant connectomes will be generated. Multiple connectomes are generated in attamp to cpature stochasticity of probablistic tractography. 
 
 0) Ensure that your local singularity version is the same version as on ACCRE
 
